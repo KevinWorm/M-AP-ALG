@@ -37,12 +37,11 @@ public class PartitionsCalculator {
         //loop through all partitions
         do{
             partition = partitions.get(partitions.size()-1);
-            loopThroughPartition(partition);
+            checkPartition(partition);
         }while(partition.get(0) > 1);
     }
 
-    //loop through parts from right to left
-    private static void loopThroughPartition(ArrayList<Integer> partition)
+    private static void checkPartition(ArrayList<Integer> partition)
     {
         int partTotal = countPartTotal(partition);
         int remainder = base - partTotal;
