@@ -1,3 +1,5 @@
+package Model;
+
 import java.util.*;
 
 /**
@@ -30,10 +32,6 @@ public class Graph {
             graph.get(vertex).add(edge);
         }
 
-        Edge edge2 = new Edge(vertex);
-        if(graph.containsKey(nVertex)){
-            graph.get(nVertex).add(edge2);
-        }
         return edge;
     }
 
@@ -58,21 +56,7 @@ public class Graph {
                 return edge;
             }
         }
-
+        System.out.println("DEBUG: no edge, vertex: "  + vertex.getName() + " to: " + nVertex);
         return null;
-    }
-
-    public double getEdgeWeight(Vertex vertex, Vertex nVertex)
-    {
-        double weight = 0;
-
-        for(Edge edge : graph.get(vertex)){
-            if(edge.getNeighbor() == nVertex){
-                weight = edge.getWeight(vertex);
-                break;
-            }
-        }
-
-        return weight;
     }
 }

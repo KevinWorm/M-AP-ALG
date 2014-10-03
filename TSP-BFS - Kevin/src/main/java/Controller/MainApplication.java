@@ -1,3 +1,7 @@
+package Controller;
+
+import View.*;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,10 +15,10 @@ public class MainApplication {
             @Override
             public void run() {
                 //Open new window
-                JFrame tspVisual = new TSPVisual();
+                JFrame tspVisual = new MainView();
                 tspVisual.setVisible(true);
 
-                ApplicationController appController = new ApplicationController(tspVisual);
+                new ApplicationController(tspVisual);
             }
         });
     }

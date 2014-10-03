@@ -1,14 +1,14 @@
-/**
+package View; /**
  * Created by Kevin Worm on 23-9-2014.
  */
 
 import javax.swing.*;
 
-public class TSPVisual extends JFrame {
+public class MainView extends JFrame {
 
-    public TSPVisual() {
+    public MainView() {
         setTitle("Traveling Salesman Problem");
-        setSize(1000, 1000);
+        setSize(800, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }

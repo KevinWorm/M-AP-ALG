@@ -1,3 +1,7 @@
+package View;
+
+import Model.Vertex;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Observer;
@@ -18,30 +22,28 @@ public class VisualVertex extends JComponent implements Observer{
         vertex = _vertex;
         vertex.addObserver(this);
 
-        width = 150;
-        height = 50;
+        width = 30;
+        height = 30;
 
         positionX = vertex.getLocationX() - (width/2);
         positionY = vertex.getLocationY() - (height/2);
 
-        this.setSize(new Dimension(width+1, height+1));
+        this.setSize(new Dimension(300, 300));
         this.setLocation(positionX, positionY);
     }
 
     public void paint(Graphics g) {
         super.paintComponent(g);
-        if(vertex.isMark()){
-            g.setColor(Color.LIGHT_GRAY);
-        }
-        else{
-            g.setColor(Color.orange);
-        }
+        g.setColor(Color.orange);
 
-        g.fill3DRect(0, 0, width, height, true);
+        g.fillOval(0, 0, width, height);
         g.setColor(Color.BLACK);
-        g.draw3DRect(0, 0, width, height, true);
-        g.drawString("Name: " + vertex.getName(), 10, 20);
-        g.drawString("X: " + vertex.getLocationX() + " Y: " + vertex.getLocationY(), 10, 40);
+        g.setFont(new Font("Dialog", Font.PLAIN, 15));
+        g.drawString(vertex.getName(), 35, 35);
+
+        //g.fill3DRect(0, 0, width, height, true);
+        //
+        //g.draw3DRect(0, 0, width, height, true);
     }
 
     public void update(Observable obs, Object obj)

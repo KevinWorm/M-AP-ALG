@@ -1,3 +1,6 @@
+package Model;
+
+import java.awt.*;
 import java.util.Observable;
 
 /**
@@ -27,9 +30,22 @@ public class Edge extends Observable {
     }
 
     public void setMark(boolean mark) {
-        this.mark = mark;
+        if(this.mark != mark){
+            this.mark = mark;
 
-        setChanged();
-        notifyObservers();
+            setChanged();
+            update();
+        }
+    }
+
+    private void update(){
+        // Notify the observers on the EDT.
+        EventQueue.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                notifyObservers();
+            }
+        });
     }
 }
