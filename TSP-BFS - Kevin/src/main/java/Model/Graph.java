@@ -27,7 +27,7 @@ public class Graph {
 
     public Edge addEdge(Vertex vertex, Vertex nVertex)
     {
-        Edge edge = new Edge(nVertex);
+        Edge edge = new Edge(vertex, nVertex);
         if(graph.containsKey(vertex)){
             graph.get(vertex).add(edge);
         }

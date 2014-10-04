@@ -21,6 +21,7 @@ public class ApplicationController implements ActionListener {
     private Graph graph;
     private TravelingSalesmanSolver tspSolver;
     private int maxVertexes = 10;
+    private String selectedAlgorithm;
 
     public ApplicationController(JFrame _jFrame){
         mainView = _jFrame;
@@ -30,15 +31,21 @@ public class ApplicationController implements ActionListener {
         mainView.getContentPane().add(graphView, BorderLayout.LINE_START);
         mainView.getContentPane().add(menuView, BorderLayout.LINE_END);
 
+        selectedAlgorithm = "Brute Force";
         graph  = new Graph();
 
         init();
     }
 
     private void init(){
-        generateDemoGraph2();
+        generateDemoGraph();
 
-        tspSolver = new TSPBruteForce(graph, "TSP Brute force thread");
+        if("Brute Force".equals(selectedAlgorithm)){
+            tspSolver = new TSPBruteForce(graph, "TSP Brute force thread");
+        }
+        else if("Greedy".equals(selectedAlgorithm)){
+            tspSolver = new TSPGreedy(graph, "TSP Greedy thread");
+        }
         tspSolver.addObserver(graphView);
     }
 
@@ -60,41 +67,19 @@ public class ApplicationController implements ActionListener {
     {
         Vector<Vertex> vertexes = new Vector<Vertex>();
 
-        vertexes.add(new Vertex("Nijmegen", 250, 750));
-        vertexes.add(new Vertex("Beuningen", 650, 750));
-        vertexes.add(new Vertex("Afferden", 150, 250));
-        vertexes.add(new Vertex("Deest", 550, 250));
-        vertexes.add(new Vertex("Groningen", 800, 475));
-        vertexes.add(new Vertex("Venendaal", 100, 500));
-        vertexes.add(new Vertex("Ellen", 500, 500));
-
-        graph.clear();
-
-        for(Vertex vertex : vertexes){
-            graph.addVertex(vertex);
-            //add vertexes to view
-            graphView.add(new VisualVertex(vertex), (Integer) 30);
-        }
-
-        generateEdgesCompleteGraph(vertexes);
-    }
-
-    private void generateDemoGraph2()
-    {
-        Vector<Vertex> vertexes = new Vector<Vertex>();
-
         vertexes.add(new Vertex("Nijmegen", 50, 100));
         vertexes.add(new Vertex("Druten", 250, 100));
         vertexes.add(new Vertex("Beuningen", 450, 100));
         vertexes.add(new Vertex("Ewijk", 250, 200));
         vertexes.add(new Vertex("Deest", 50, 300));
-        vertexes.add(new Vertex("Boven-Leeuwen", 150, 300));
+        vertexes.add(new Vertex("Leeuwen", 150, 300));
         vertexes.add(new Vertex("Elst", 350, 300));
         vertexes.add(new Vertex("Dreumel", 450, 300));
         vertexes.add(new Vertex("Horssen", 50, 500));
         vertexes.add(new Vertex("Lent", 250, 500));
         vertexes.add(new Vertex("Arnhem", 450, 500));
         vertexes.add(new Vertex("Rotterdam", 250, 400));
+        vertexes.add(new Vertex("Midden", 250, 300));
 
         //remove vertexes if max is set
         if(vertexes.size() > maxVertexes){
@@ -137,14 +122,32 @@ public class ApplicationController implements ActionListener {
         String action = e.getActionCommand();
         if(action.equals("Start")){
             startTSPSolver();
+
+            //change button
+            JButton jb = (JButton)e.getSource();
+            jb.setText("Cancel");
+
+            menuView.setMaxVertexListEnabled(false);
+            menuView.setTSPAlgorithmListEnabled(false);
         }
         else if(action.equals("Cancel")){
             reset();
+
+            //change button
+            JButton jb = (JButton)e.getSource();
+            jb.setText("Start");
+
+            menuView.setMaxVertexListEnabled(true);
+            menuView.setTSPAlgorithmListEnabled(true);
         }
         else if(action.equals("ComboBoxMaxVertexes")){
             JComboBox cb = (JComboBox)e.getSource();
-            System.out.println((String)cb.getSelectedItem());
             maxVertexes = Integer.parseInt((String)cb.getSelectedItem());
+            reset();
+        }
+        else if(action.equals("ComboBoxTSPAlgorithm")){
+            JComboBox cb = (JComboBox)e.getSource();
+            selectedAlgorithm = (String)cb.getSelectedItem();
             reset();
         }
     }

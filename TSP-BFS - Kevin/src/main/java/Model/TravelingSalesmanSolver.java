@@ -13,6 +13,7 @@ public abstract class TravelingSalesmanSolver extends Observable implements Runn
     private String threadName;
     private boolean fIsStopRequested;
     private int totalRoutesCalculated;
+    private double cheapestRouteCost;
 
     //Limit update of the view to every ... milli seconds
     int minMillisecondsBetweenUpdate = 100;
@@ -22,12 +23,13 @@ public abstract class TravelingSalesmanSolver extends Observable implements Runn
         threadName = _threadName;
         graph = _graph;
         totalRoutesCalculated = 0;
+        cheapestRouteCost = 0;
         lastUpdateTime = System.currentTimeMillis();
     }
 
     public void run(){
         System.out.println("Running " +  threadName );
-        solve(graph);
+        solve();
         //force update for last value
         update(true);
         System.out.println("Thread " + threadName + " exiting.");
@@ -42,7 +44,7 @@ public abstract class TravelingSalesmanSolver extends Observable implements Runn
         }
     }
 
-    protected abstract void solve(Graph _graph);
+    protected abstract void solve();
 
     public boolean isAlive(){
         if (thread == null) {
@@ -66,6 +68,16 @@ public abstract class TravelingSalesmanSolver extends Observable implements Runn
 
     protected synchronized void increaseTotalRoutesCalculated(int total) {
         totalRoutesCalculated += total;
+        setChanged();
+        update();
+    }
+
+    public synchronized double getCheapestRouteCost(){
+        return cheapestRouteCost;
+    }
+
+    protected synchronized void setCheapestRouteCost(double routeCost) {
+        cheapestRouteCost = routeCost;
         setChanged();
         update();
     }

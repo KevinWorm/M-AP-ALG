@@ -6,16 +6,18 @@ import java.util.Observable;
 /**
  * Created by Kevin Worm on 22-9-2014.
  */
-public class Edge extends Observable {
+public class Edge extends Observable implements Comparable {
+    private Vertex root;
     private Vertex neighbor;
     private boolean mark;
 
-    public Edge(Vertex _neighbor)
+    public Edge(Vertex _root, Vertex _neighbor)
     {
+        root = _root;
         neighbor = _neighbor;
     }
 
-    public double getWeight(Vertex root) {
+    public double getWeight() {
         //calculate euclidean distance between vertexes
         return Math.sqrt(Math.pow((neighbor.getLocationX() - root.getLocationX()),2) +
                 Math.pow((neighbor.getLocationY() - root.getLocationY()),2));
@@ -47,5 +49,21 @@ public class Edge extends Observable {
                 notifyObservers();
             }
         });
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if(o instanceof Edge){
+            if(getWeight() > ((Edge) o).getWeight()){
+                return 1;
+            }
+            else if(getWeight() < ((Edge) o).getWeight()){
+                return -1;
+            }
+            else {
+                return 0;
+            }
+        }
+        return 0;
     }
 }
