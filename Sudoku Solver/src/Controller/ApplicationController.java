@@ -37,7 +37,8 @@ public class ApplicationController implements ActionListener {
                 {9,7,null,5,null,null,null,null,null},
                 {5,null,null,null,3,null,7,null,null}};
 
-        sudokuView.setMatrix(sudokuMatrix, Color.blue);
+        //add puzzle to view and lock it so it won't be changed by the solutions
+        sudokuView.setMatrix(sudokuMatrix, Color.blue, true);
     }
 
     private void startSudokuSolver(){
@@ -50,11 +51,9 @@ public class ApplicationController implements ActionListener {
         while(!sudokuSolverWorker.isDone()){
         }
 
-        //remove from main, create new view and add again
-        mainView.getContentPane().remove(sudokuView);
-        sudokuView = new SudokuView();
-        mainView.getContentPane().add(sudokuView, BorderLayout.LINE_START);
-        sudokuView.setMatrix(sudokuMatrix, Color.blue);
+        sudokuView.reset();
+        //add puzzle to view and lock it so it won't be changed by the solutions
+        sudokuView.setMatrix(sudokuMatrix, Color.blue, true);
     }
 
     @Override

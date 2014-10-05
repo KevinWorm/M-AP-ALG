@@ -21,11 +21,6 @@ public class SudokuSolverWorker extends SwingWorker<Integer[][], Integer[][]> {
         sudokuView = _sudokuView;
         sudoku = _sudoku;
         solution = new Integer[9][9];
-
-        init();
-    }
-
-    private void init(){
     }
 
     @Override
@@ -43,76 +38,51 @@ public class SudokuSolverWorker extends SwingWorker<Integer[][], Integer[][]> {
     //recursive function, return true when finished, when false try next solution (backtrack)
     private boolean sudokuBacktrack(int currentRow, int currentColumn){
 
-        //get numbers that aren't used yet in the current row or column
+        //get values that aren't used yet in the current row or column or 3x3 grid
         Integer[] unusedNumbers = getUnusedNumbers(currentRow, currentColumn);
 
-        //if there are no more possibility's return false
-        if(unusedNumbers.length == 0){
-            return false;
-        }
+        //if there are no more possible values return false - backtrack
+        if(unusedNumbers.length == 0) return false;
 
         for(int i=0; i < unusedNumbers.length; i++){
-            solution[currentRow][currentColumn] = unusedNumbers[i];
+            //if worker is canceled return
+            if(isCancelled())return true;
 
-            print();
-            //show current solution
+            //fill current sub field with a available value
+            solution[currentRow][currentColumn] = unusedNumbers[i];
+            //publish current solution
             publish(solution);
 
             //slow down for visual
             try {
-                Thread.sleep(1);
+                Thread.sleep(4);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            //if worker is canceled return
-            if(isCancelled())return true;
 
-            int row = currentRow;
-            int column = currentColumn;
-
-            //goto next
+            int row = currentRow, column = currentColumn;
             //move to first empty field
             while(row < 9){
                 column++;
-                if(column == 9){
-                    column = 0;
-                    row++;
-                }
-                if(row == 9){
-                    //solution found
-                    return true;
-                }
+                //if last column, move to next row
+                if(column == 9) column = 0; row++;
+                //end of field, solution found return
+                if(row == 9)return true;
 
-                //if field is empty use field
+                //if field is empty, use field
                 if(sudoku[row][column] == null){
-                    //recursive function with new position
-                    if(sudokuBacktrack(row, column)){
-                        return true;
-                    }
-                    //break and try next number
+                    //recursive function, if return is true, solution is found or worker is canceled
+                    if(sudokuBacktrack(row, column))return true;
+                    //break and try next value
                     break;
                 }
             }
         }
 
-        //clear value
+        //clear current sub field
         solution[currentRow][currentColumn] = null;
         //backtrack
         return false;
-    }
-
-    private void print(){
-        System.out.println();
-        for(int i=0; i<9; i++){
-            for(int j=0; j<9; j++){
-                System.out.print((sudoku[i][j] != null) ? sudoku[i][j] : "-");
-                System.out.print((solution[i][j] != null) ? solution[i][j] : "-");
-                System.out.print(", ");
-                if(j==8){
-                    System.out.println();
-                }
-            }
-        }
     }
 
     //return numbers thar are not used in the current row or column or 3x3 grid
@@ -143,7 +113,6 @@ public class SudokuSolverWorker extends SwingWorker<Integer[][], Integer[][]> {
                 unusedNumbers.remove(solution[i][j]);
             }
         }
-
         return unusedNumbers.toArray(new Integer[0]);
     }
 
@@ -154,6 +123,21 @@ public class SudokuSolverWorker extends SwingWorker<Integer[][], Integer[][]> {
             lastElement = chunks.get(chunks.size() - 1);
         }
         sudokuView.setMatrix(lastElement, Color.RED);
+        print();
     }
 
+    //Print sudoku field with solution in console
+    private void print(){
+        System.out.println();
+        for(int i=0; i<9; i++){
+            for(int j=0; j<9; j++){
+                System.out.print((sudoku[i][j] != null) ? sudoku[i][j] : "-");
+                System.out.print((solution[i][j] != null) ? solution[i][j] : "-");
+                System.out.print(", ");
+                if(j==8){
+                    System.out.println();
+                }
+            }
+        }
+    }
 }

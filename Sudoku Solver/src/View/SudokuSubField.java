@@ -10,6 +10,8 @@ import java.text.NumberFormat;
  */
 public class SudokuSubField extends JFormattedTextField  {
 
+    private boolean locked;
+
     public SudokuSubField(){
         init();
     }
@@ -22,6 +24,24 @@ public class SudokuSubField extends JFormattedTextField  {
     private void init(){
         setFont(new Font("Dialog", Font.PLAIN, 25));
         setHorizontalAlignment(SwingConstants.CENTER);
+        setEnabled(false);
+        locked = false;
+    }
+
+    public void reset(){
+        setText("");
+        locked = false;
+    }
+
+    @Override
+    public void setText(String text){
+        if(!locked){
+            super.setText(text);
+        }
+    }
+
+    public void setLocked(){
+        locked = true;
     }
 
     public void setColor(Color color){

@@ -30,27 +30,18 @@ public class SudokuBlock extends JPanel {
         }
     }
 
-    public void setField(int row, int column, int value){
-        int fieldX = column % 3;
-        int fieldY = row % 3;
-
-        if(value > 9){
-            System.out.println("Error value is higher than 9, value is: " + value);
+    public void reset(){
+        for(int i=0; i < 3; i++){
+            for(int j=0; j < 3; j++){
+                sudokuSubFields[i][j].reset();
+            }
         }
-        sudokuSubFields[fieldY][fieldX].setText(value + "");
     }
 
-    public void setColor(int row, int column, Color color){
+    public SudokuSubField getField(int row, int column){
         int fieldX = column % 3;
         int fieldY = row % 3;
 
-        sudokuSubFields[fieldY][fieldX].setColor(color);
-    }
-
-    public void setFieldEnabled(int row, int column, boolean enabled){
-        int fieldX = column % 3;
-        int fieldY = row % 3;
-
-        sudokuSubFields[fieldY][fieldX].setEnabled(enabled);
+        return sudokuSubFields[fieldY][fieldX];
     }
 }

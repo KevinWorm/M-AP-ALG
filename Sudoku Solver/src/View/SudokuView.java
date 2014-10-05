@@ -29,25 +29,44 @@ public class SudokuView extends JPanel {
         }
     }
 
-    public void setField(int row, int column, int value, Color color){
+    public void reset(){
+        for(int i=0; i < 3; i++){
+            for(int j=0; j < 3; j++){
+                sudokuBlocks[i][j].reset();
+            }
+        }
+    }
+
+    public SudokuSubField getSubField(int row, int column){
         int blockY = row / 3;
         int blockX = column / 3;
 
-        if(value > 9){
-            System.out.println("Error value is higher than 9, value is: " + value);
-        }
-
-        sudokuBlocks[blockY][blockX].setField(row, column, value);
-        sudokuBlocks[blockY][blockX].setFieldEnabled(row, column, false);
-        sudokuBlocks[blockY][blockX].setColor(row, column, color);
+        return sudokuBlocks[blockY][blockX].getField(row, column);
     }
 
-    public void setMatrix(Integer[][] field, Color color){
+    public void setTextField(int row, int column, Integer value, Color color){
+        setTextField(row, column, value, color, false);
+    }
+
+    public void setTextField(int row, int column, Integer value, Color color, boolean puzzle){
+        SudokuSubField subField = getSubField(row,column);
+        //set value to field, if its null set empty string
+        subField.setText(((value != null) ? value : "") + "");
+        subField.setColor(color);
+        //only if value is not null and puzzle is true, lock sub field
+        if(value != null && puzzle){
+            subField.setLocked();
+        }
+    }
+
+    public void setMatrix(Integer[][] field, Color color) {
+        setMatrix(field, color, false);
+    }
+
+    public void setMatrix(Integer[][] field, Color color, boolean puzzle){
         for(int i=0; i < 9; i++){
             for(int j=0; j < 9; j++){
-                if(field[i][j] != null){
-                    setField(i,j,field[i][j], color);
-                }
+                setTextField(i,j,field[i][j], color, puzzle);
             }
         }
     }
